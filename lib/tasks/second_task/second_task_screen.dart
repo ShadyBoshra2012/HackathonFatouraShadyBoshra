@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /*
@@ -10,10 +11,6 @@ import 'package:flutter/material.dart';
  you need to optimize build function as
  when i pressed on Button don't rebuild Background widget
  */
-class SecondTaskScreen extends StatefulWidget {
-  @override
-  _SecondTaskScreenState createState() => _SecondTaskScreenState();
-}
 
 class BackgroundWidget extends StatelessWidget {
   final Widget child;
@@ -28,8 +25,10 @@ class BackgroundWidget extends StatelessWidget {
   }
 }
 
-class _SecondTaskScreenState extends State<SecondTaskScreen> {
-  Color _randomColor = Colors.black;
+// Shady: Change to stateless widget.
+class SecondTaskScreen extends StatelessWidget {
+  // Shady: Add final and change its type to ValueNotifier.
+  final ValueNotifier<Color> _randomColor = ValueNotifier<Color>(Colors.black);
   final _random = Random();
 
   @override
@@ -41,19 +40,25 @@ class _SecondTaskScreenState extends State<SecondTaskScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            _randomColor =
-                Colors.primaries[_random.nextInt(Colors.primaries.length)];
-          });
+          // Shady: Remove setState and change its value directrly.
+          _randomColor.value =
+              Colors.primaries[_random.nextInt(Colors.primaries.length)];
         },
         child: Icon(Icons.colorize),
       ),
       body: BackgroundWidget(
           child: Center(
-        child: Container(
-          width: 100,
-          height: 100,
-          color: _randomColor,
+        child: ValueListenableBuilder(
+          builder: (BuildContext context, Color value, Widget? child) {
+            // This builder will only get called when the _randomColor
+            // is updated.
+            return Container(
+              width: 100,
+              height: 100,
+              color: value,
+            );
+          },
+          valueListenable: _randomColor,
         ),
       )),
     );

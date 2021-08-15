@@ -16,6 +16,9 @@ class FirstTaskScreen extends StatefulWidget {
 }
 
 class BackgroundWidget extends StatelessWidget {
+  // Shady: Just add const to the widget constructor.
+  const BackgroundWidget();
+
   @override
   Widget build(BuildContext context) {
     print("Building BackgroundWidget");
@@ -46,7 +49,8 @@ class _FirstTaskScreenState extends State<FirstTaskScreen> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(child: BackgroundWidget()),
+          // Shady: Add const value of Background Widget.
+          Positioned.fill(child: const BackgroundWidget()),
           Center(
             child: Container(
               width: 100,
